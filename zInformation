@@ -1,0 +1,59 @@
+"dev": "nodemon -r dotenv/config --experimental-json-modules backend2/server2.js"
+
+
+
+
+
+Create frontend and backend folders
+
+install vite app inn frontend
+
+generate (npm init -y) json file
+change index.js into server.js in root package json file
+
+create server using express inn server.js
+
+install dotenv express mongoose nodeman jsonwebtoken cookie-parser dcyptjs
+
+use middleware in server.js for multiple routes
+
+create route folder in backend folder
+create auth.routes.js file in route folder
+
+create Authentication routes in auth.route.js file
+
+create auth.controllers.js file for controllers like login, signup and logout
+import this controllers in auth.routes.js file
+
+create request folders in postman and now create database for data storage 
+
+create database in mongoDB and add url and pass with name to enviroment variable
+
+create connectDb.js file in db folder for Database connection 
+and import connectToDb function in server.js file
+
+created  user model in models folder and write sign up controller
+
+hashing password in signup controller using bycriptjs
+
+create utils folder and add token generator function in utils folder
+
+getting error of duplicate email in signup controller and remove it from database in indexes section delete duplicate email from indexes
+
+add login controller into auth.controllers.js file
+
+
+created message and conversation model in models folder
+
+in message controller we can get user id by (req.params.id) because we write (id) in route
+router.route("/send/:id").post(sendMessage);
+
+if we use userId instead of id in the above code then we can get user id by (req.params.userId)
+
+use {router.route("/send/:id").post(protectRoute,sendMessage)} middleware in the message route to check before send message . if the user is loggedIn or not.
+
+use cookie parser in server.js to get cookies
+
+write some code (0 to 4th line) in message controller and then 
+write protectRoute middleware in middleware folder to get the user id
+and now again write code in message controller to send message to the user
