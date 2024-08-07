@@ -1,9 +1,9 @@
 {
   "name": "chat-app-project",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "server2.js",
   "scripts": {
-    "dev": "nodemon -r dotenv/config --experimental-json-modules backend/server.js"
+    "dev": "nodemon -r dotenv/config --experimental-json-modules backend2/server2.js"
   },
   "type": "module",
   "keywords": [],

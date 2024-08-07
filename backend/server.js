@@ -1,9 +1,13 @@
 import express from 'express';
-import connectToMangoDb from './db/connectDb.js'
-import authRoutes from "./routes/auth.routes.js"
-import messageRoutes from "./routes/message.routes.js"
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+
+import connectToMangoDb from './db/connectDb.js'
+
+import authRoutes from "./routes/auth.routes.js"
+import messageRoutes from "./routes/message.routes.js"
+import userRoutes from "./routes/user.routes.js"
+
 // import bodyParser from 'body-parser';
 
 const app = express();
@@ -18,6 +22,7 @@ app.use(cookieParser())  // before runing the below middleware we will access th
 // middleware
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/messages", messageRoutes);
+app.use("/api/v1/users", userRoutes);
 
 
 // app.get("/", (req, res) => {

@@ -57,3 +57,7 @@ use cookie parser in server.js to get cookies
 write some code (0 to 4th line) in message controller and then 
 write protectRoute middleware in middleware folder to get the user id
 and now again write code in message controller to send message to the user
+
+created send message and get message controller in message.controller.js file
+create user.route.js file in routes file and user.controller.js file in controller folder
+
