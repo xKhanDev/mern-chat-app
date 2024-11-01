@@ -1,21 +1,45 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import useLogin from "../../hooks/useLogin";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const Login = () => {
   const [inputs, setInputs] = useState({
-    username: "",
+    userName: "",
     password: "",
   });
 
-  const { loading, login } = useLogin();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(inputs);
-    await login(inputs);
-  };
+    const success = handleInputError(inputs);
+    if (!success) {
+      return toast.error("All feilds are required");
+    }
 
+    await axios
+      .post("http://localhost:5000/api/v1/auth/login", inputs, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        // const data = res.data;
+        // console.log(data);
+        toast.success("Login successful");
+        window.location.href = "/";
+      })
+      .catch((error) => {
+        // console.error("Error during login:", error);
+        toast.error("Login failed. Please check your credentials.");
+      });
+  };
+  const handleInputError = ({ userName, password }) => {
+    if (!userName || !password) {
+      toast.error("All feilds are required");
+      return false;
+    }
+    return true;
+  };
   return (
     <div className="flex flex-col justify-center items-center min-w-96 mx-auto">
       <div className="w-full p-6 rounded-lg shadow-md bg-white backdrop-filter bg-clip-padding backdrop-blur-lg bg-opacity-20">
@@ -34,9 +58,9 @@ const Login = () => {
               type="text"
               placeholder="Enter username"
               className="w-full input input-bordered h-10"
-              value={inputs.username}
+              value={inputs.userName}
               onChange={(e) =>
-                setInputs({ ...inputs, username: e.target.value })
+                setInputs({ ...inputs, userName: e.target.value })
               }
             />
           </div>

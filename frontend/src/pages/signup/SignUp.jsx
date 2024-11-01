@@ -1,22 +1,64 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import useSignup from "../../hooks/useSignup.js";
-
+import toast from "react-hot-toast";
 const SignUp = () => {
   let [inputs, setInputs] = useState({
-    fullname: "",
-    username: "",
+    fullName: "",
+    userName: "",
     password: "",
     confirmPassword: "",
     gender: "male",
   });
 
-  const { loading, signup } = useSignup();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(inputs);
-    await signup(inputs);
+    const success = handleInputError(inputs);
+    if (!success) return;
+
+    // console.log(inputs);
+
+    try {
+      await axios
+        .post("/api/v1/auth/signup", inputs, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((res) => {
+          toast.success("Signup successful");
+          window.location.href = "/login";
+          // const data = res.data;
+          // console.log(`data is :`, data);
+        });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleInputError = ({
+    fullName,
+    userName,
+    password,
+    confirmPassword,
+    gender,
+  }) => {
+    if (!fullName || !userName || !password || !confirmPassword) {
+      toast.error("All fields are required");
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return false;
+    }
+
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return false;
+    }
+
+    return true;
   };
 
   return (
@@ -35,11 +77,11 @@ const SignUp = () => {
             </label>
             <input
               type="text"
-              placeholder="Safeer Khan"
+              placeholder="Ex: Safeer Khan"
               className="w-full input input-bordered h-10"
-              value={inputs.fullname}
+              value={inputs.fullName}
               onChange={(e) =>
-                setInputs({ ...inputs, fullname: e.target.value })
+                setInputs({ ...inputs, fullName: e.target.value })
               }
             />
           </div>
@@ -51,11 +93,11 @@ const SignUp = () => {
             </label>
             <input
               type="text"
-              placeholder="safeerkhan"
+              placeholder="Ex: safeerkhan"
               className="w-full input input-bordered h-10"
-              value={inputs.username}
+              value={inputs.userName}
               onChange={(e) => {
-                setInputs({ ...inputs, username: e.target.value });
+                setInputs({ ...inputs, userName: e.target.value });
               }}
             />
           </div>

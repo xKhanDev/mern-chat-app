@@ -9,30 +9,22 @@ import authRoutes from "./routes/auth.routes.js"
 import messageRoutes from "./routes/message.routes.js"
 import userRoutes from "./routes/user.routes.js";
 
-// import bodyParser from 'body-parser';
+import bodyParser from 'body-parser';
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
 
 dotenv.config();
 
-app.use(cors({
-    origin: 'http://localhost:3000'
-}))
+app.use(cors())
 
-app.use(express.json()); // to accept json data from body(req.body)
+app.use(bodyParser.json()); // to accept json data from body(req.body)
 app.use(cookieParser())  // before runing the below middleware we will access the cookie
 
 // middleware
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/messages", messageRoutes);
 app.use("/api/v1/users", userRoutes);
-
-
-// app.get("/", (req, res) => {
-//     res.send("hello world !!")
-// });
-
 
 app.listen(port, () =>{
     connectToMangoDb();

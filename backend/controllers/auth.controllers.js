@@ -4,7 +4,7 @@ import generateTokenAndSetCookies from '../utils/generateToken.js';
 
 export const signup = async (req, res) => {
     try {
-        console.log(req.body);
+        // console.log(req.body);
         const { fullName, userName, password, confirmPassword, gender } = req.body;
 
         if (!fullName || !userName || !password || !confirmPassword || !gender) {
@@ -50,7 +50,7 @@ export const signup = async (req, res) => {
             profilePic: newUser.profilePic,
         });
         }else{
-            res.status(400).json({error:"Invalid user data"})
+            res.status(200).json({error:"Invalid user data, done"})
         }
     } catch (error) {
         if (error.name === "ValidationError") {
