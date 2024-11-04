@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useAuthContext } from "../../context/AuthContext";
 const SignUp = () => {
   let [inputs, setInputs] = useState({
     fullName: "",
@@ -10,14 +11,16 @@ const SignUp = () => {
     confirmPassword: "",
     gender: "male",
   });
+  const [loading, setLoading] = useState(false);
+  const { setAuthUser } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const success = handleInputError(inputs);
     if (!success) return;
 
     // console.log(inputs);
-
     try {
       await axios
         .post("/api/v1/auth/signup", inputs, {
@@ -27,12 +30,22 @@ const SignUp = () => {
         })
         .then((res) => {
           toast.success("Signup successful");
-          window.location.href = "/login";
+          const data = res.data;
+          if (data.error) {
+            throw new Error(data.error);
+          }
+          //local storage
+          localStorage.setItem("chat-user", JSON.stringify(data));
+          //context
+          setAuthUser(data);
+
           // const data = res.data;
           // console.log(`data is :`, data);
         });
     } catch (error) {
       console.log(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -186,8 +199,13 @@ const SignUp = () => {
             <button
               className="btn btn-sm mt-4 hover:shadow-lg hover:shadow-blue-500 hover:border-white hover:border-[0.1px]"
               type="submit"
+              disabled={loading}
             >
-              Sign Up
+              {loading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </div>
         </form>

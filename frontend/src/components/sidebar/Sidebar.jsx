@@ -10,12 +10,6 @@ const Sidebar = () => {
       <div className="divider px-3"></div>
       <div className="flex flex-col overflow-y-auto mb-2">
         <Conversations />
-        <Conversations />
-        <Conversations />
-        <Conversations />
-        <Conversations />
-        <Conversations />
-        <Conversations />
       </div>
       <LogOut />
     </div>

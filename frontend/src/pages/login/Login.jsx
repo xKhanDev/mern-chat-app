@@ -2,14 +2,18 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useAuthContext } from "../../context/AuthContext";
 
 const Login = () => {
   const [inputs, setInputs] = useState({
     userName: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const { setAuthUser } = useAuthContext();
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const success = handleInputError(inputs);
     if (!success) {
@@ -17,25 +21,29 @@ const Login = () => {
     }
 
     await axios
-      .post("http://localhost:5000/api/v1/auth/login", inputs, {
+      .post("/api/v1/auth/login", inputs, {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((res) => {
-        // const data = res.data;
-        // console.log(data);
+        const data = res.data;
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        localStorage.setItem("chat-user", JSON.stringify(data));
+        setAuthUser(data);
         toast.success("Login successful");
-        window.location.href = "/";
       })
       .catch((error) => {
         // console.error("Error during login:", error);
         toast.error("Login failed. Please check your credentials.");
-      });
+      })
+      .finally(() => setLoading(false));
   };
   const handleInputError = ({ userName, password }) => {
     if (!userName || !password) {
-      toast.error("All feilds are required");
+      toast.error("All fields are required");
       return false;
     }
     return true;
@@ -90,8 +98,13 @@ const Login = () => {
             <button
               className="btn btn-sm mt-4 hover:shadow-lg hover:shadow-blue-500 hover:border-white hover:border-[0.1px]"
               type="submit"
+              disabled={loading}
             >
-              Login
+              {loading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
         </form>

@@ -61,3 +61,5 @@ and now again write code in message controller to send message to the user
 created send message and get message controller in message.controller.js file
 create user.route.js file in routes file and user.controller.js file in controller folder
 
+add context folder in frontend in src and also create authContext.js file in context folder for user but how?
+whenever user signup he will navigate to home page and can't access signup page

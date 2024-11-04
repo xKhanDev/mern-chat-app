@@ -47,25 +47,26 @@ export const sendMessage = async(req,res)=>{
 }
 
 // get message between two users
-export const getMessage = async(req,res)=>{
+export const getMessage = async (req, res) => {
     try {
-        
-        const {id:userToChatId} = req.params;
-        const senderId = req.user._id;
-
-        const conversation = await Conversation.findOne({
-            participants:{$all:[userToChatId,senderId]}
-        }).populate("messages"); // this will give actuall messages not refrence to the msgs
-
-        if(!conversation) res.status(200).json([]);
-        
-        const messages = conversation.messages;
-
-        res.status(200).json(messages)
-
-
+      const { id: userToChatId } = req.params;
+      const senderId = req.user._id;
+  
+      const conversation = await Conversation.findOne({
+        participants: { $all: [userToChatId, senderId] },
+      }).populate("messages"); // Populates messages instead of referencing IDs
+  
+      if (!conversation) {
+        // If no conversation is found, return an empty array and exit
+        return res.status(200).json([]);
+      }
+  
+      // If conversation exists, send back the messages
+      const messages = conversation.messages;
+      return res.status(200).json(messages);
+      
     } catch (error) {
-        res.status(401).json({error:"something went wrong"})
-        console.log("ERROR IN GET MESSAGE CONTROLLER")
+      console.error("ERROR IN GET MESSAGE CONTROLLER:", error);
+      return res.status(500).json({ error: "Something went wrong" });
     }
-}
+  };
