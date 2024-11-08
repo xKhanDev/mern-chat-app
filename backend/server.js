@@ -1,4 +1,3 @@
-import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
@@ -10,8 +9,8 @@ import messageRoutes from "./routes/message.routes.js"
 import userRoutes from "./routes/user.routes.js";
 
 import bodyParser from 'body-parser';
+import { app, server } from './socket/socket.js';
 
-const app = express();
 const port = process.env.PORT || 8000;
 
 dotenv.config();
@@ -26,7 +25,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/messages", messageRoutes);
 app.use("/api/v1/users", userRoutes);
 
-app.listen(port, () =>{
+server.listen(port, () =>{
     connectToMangoDb();
     console.log("server is running on port: ", port)
 })

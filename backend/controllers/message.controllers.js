@@ -1,11 +1,13 @@
 import Conversation from "../models/conversation.models.js"
 import Message from "../models/message.models.js"
+import { getRecieverSocketId } from "../socket/socket.js";
+import { io } from "../socket/socket.js";
 export const sendMessage = async(req,res)=>{
     try {
         
         const {message} = req.body;
         const {id:receiverId} = req.params;
-        const senderId = req.user._id;
+        const senderId = req.user?._id;
 
         let conversation = await Conversation.findOne({
             participants:{
@@ -29,13 +31,17 @@ export const sendMessage = async(req,res)=>{
             conversation.messages.push(newMessage._id)
         }
 
-        //NOTE: SOCKET IO FUNCTIONALITY WILL WRITE HERE
-
         // await conversation.save();
         // await newMessage.save();
 
         // this is same as the above two lines the difference is that this is run in parallal
         await Promise.all([conversation.save(),newMessage.save()]);
+
+        //NOTE: SOCKET IO FUNCTIONALITY WILL WRITE HERE
+        const recieverSocketId = getRecieverSocketId(receiverId) 
+        if(recieverSocketId){
+            io.to(recieverSocketId).emit("newMessage",newMessage)
+        }
 
         res.status(200).json(newMessage)
         

@@ -12,6 +12,8 @@ const Message = ({ message, loading }) => {
     : selectedConversation?.profilePic;
   const bubbleColor = fromMe ? "bg-blue-500" : "bg-gray-700";
   const messageTime = message?.createdAt;
+  const shakeClass = message?.shouldShake ? "shake" : "";
+
   return (
     <div className={`chat  ${chatClassName}`}>
       <div className="chat-image avatar">
@@ -20,7 +22,9 @@ const Message = ({ message, loading }) => {
         </div>
       </div>
 
-      <div className={`chat-bubble text-white ${bubbleColor} pb-1`}>
+      <div
+        className={`chat-bubble text-white ${bubbleColor} pb-1 ${shakeClass}`}
+      >
         {!loading ? (
           message.message
         ) : (

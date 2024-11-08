@@ -3,10 +3,14 @@ import React, { useState, useEffect, useRef } from "react";
 import Message from "./Message";
 import toast from "react-hot-toast";
 import useConversation from "../../zustand/useConversation";
+import useListenMessages from "../../utils/useListenMessages";
+import { useSocketContext } from "../../context/SocketContext";
 
 const Messages = () => {
   const [loading, setLoading] = useState(false);
   const { messages, setMessages, selectedConversation } = useConversation();
+  const { socket } = useSocketContext();
+  useListenMessages();
   const lastMessageRef = useRef();
 
   useEffect(() => {
@@ -15,7 +19,7 @@ const Messages = () => {
       setLoading(true);
       try {
         const res = await axios.get(
-          `/api/v1/messages/${selectedConversation._id}`
+          `/api/v1/messages/${selectedConversation?._id}`
         );
         const data = res.data;
         if (data.error) throw new Error(data.error); // Check for error in response

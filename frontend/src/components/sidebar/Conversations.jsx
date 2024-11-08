@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { getRandomEmoji } from "../../utils/emojies";
 import useConversation from "../../zustand/useConversation";
+import { useSocketContext } from "../../context/SocketContext";
 
 const Conversations = () => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const { selectedConversation, setSelectedConversation } = useConversation();
+  const { onlineUsers } = useSocketContext();
 
   useEffect(() => {
     const getConversations = async () => {
@@ -43,7 +45,11 @@ const Conversations = () => {
             }`}
             onClick={() => setSelectedConversation(user)}
           >
-            <div className="avatar online">
+            <div
+              className={`avatar ${
+                onlineUsers.includes(user._id) ? "online" : ""
+              }`}
+            >
               <div className="w-14 rounded-full">
                 {loading ? (
                   <span className="loading loading-spinner"></span>
