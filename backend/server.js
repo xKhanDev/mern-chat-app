@@ -20,6 +20,7 @@ app.use(cors())
 app.use(bodyParser.json()); // to accept json data from body(req.body)
 app.use(cookieParser())  // before runing the below middleware we will access the cookie
 
+
 // middleware
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/messages", messageRoutes);
