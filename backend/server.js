@@ -17,7 +17,8 @@ const port = process.env.PORT || 8000;
 
 dotenv.config();
 
-app.use(cors())
+app.use(cors({ origin: 'https://xkhan-chat.vercel.app', credentials: true }));
+
 
 const __dirname = path.resolve();
 app.use(bodyParser.json()); // to accept json data from body(req.body)
