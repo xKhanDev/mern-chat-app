@@ -22,9 +22,6 @@ const protectRoute = async (req, res, next) => {
       if (error.name === "TokenExpiredError") {
         return res.status(401).json({ error: "Unauthorized: Token expired" });
       }
-
-      console.error("Error in protectRoute:", error.message);
-      res.status(500).json({ error: "Internal server error" });
     }
   } catch (error) {
     console.error("Error in protectRoute:", error.message);
