@@ -8,6 +8,7 @@ const LogOut = () => {
   const [loading, setLoading] = useState(false);
   const { setAuthUser } = useAuthContext();
   const logoutFun = async () => {
+    localStorage.removeItem("chat-user");
     try {
       setLoading(true);
       const res = await axios.post("/api/v1/auth/logout", {
@@ -20,8 +21,6 @@ const LogOut = () => {
         throw new Error(data.error);
       }
       toast.success("Logged out successfully");
-      //removing from local storage
-      localStorage.removeItem("chat-user");
       //setting auth user to null
       setAuthUser(null);
     } catch (error) {

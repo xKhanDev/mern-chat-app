@@ -1,6 +1,12 @@
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
 import User from '../models/user.models.js';
-import generateTokenAndSetCookies from '../utils/generateToken.js';
+
+const generateAccessToken =(userId)=>{
+    return jwt.sign({userId},process.env.JWT_SECRET_KEY,{
+        expiresIn:"15d"
+    })
+}
 
 export const signup = async (req, res) => {
     try {
@@ -39,7 +45,7 @@ export const signup = async (req, res) => {
         if(newUser){ 
             // {userId:newUser._id} === const payload = {userId:newUser._id} 👇
             // generateTokenAndSetCookies(payload,res)
-            generateTokenAndSetCookies({userId:newUser._id},res);
+            generateAccessToken(newUser._id);
             await newUser.save();
             
 
@@ -65,26 +71,30 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const {userName,password} = req.body;
+        console.log(userName,password)
     
         if(!userName || !password){
-            res.status(400).json({error:"All Feilds are Required"});
+            return res.status(400).json({error:"All Feilds are Required"});
         }
         
-        const user = await User.findOne({userName});
+        const user = await User.findOne({userName:userName});
+        console.log(user)
         const isPasswordCorrect = await bcrypt.compare(password,user?.password || "");
 
         if(!user || !isPasswordCorrect){
-            res.status(400).json({error:"invalid Credential"})
+            return res.status(400).json({error:"invalid Credential"})
         }
 
-        generateTokenAndSetCookies({userId:user?._id},res);
+        const accessToken = generateAccessToken(user._id);
 
-        res.status(200).json({
+        res.cookie("accessToken",accessToken,{httpOnly:true,secure:true});
+
+        return res.status(200).json({
             _id:user._id,
             fullName:user.fullName,
             userName:user.userName,
             profilePic:user.profilePic
-        });
+        })
 
     } catch (error) {
         console.log("error in login controller",error.message)
@@ -96,7 +106,7 @@ export const login = async (req, res) => {
 export const logout = async(req, res) => {
     try {
         
-        res.cookie("jwt","",{maxAge:0});
+        res.cookie("accessToken","",{maxAge:0});
         res.status(200).json({message:"Logout Succefully"})
 
     } catch (error) {

@@ -13,11 +13,13 @@ import userRoutes from "./routes/user.routes.js";
 import bodyParser from 'body-parser';
 import { app, server } from './socket/socket.js';
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 dotenv.config();
 
-app.use(cors({ origin: 'https://xkhan-chat.vercel.app', credentials: true }));
+app.use(cors({
+    origin:"*"
+}));
 
 
 const __dirname = path.resolve();
